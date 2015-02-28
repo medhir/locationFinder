@@ -102,10 +102,10 @@ service.getDistanceMatrix({
 
 //array of objects with distance, office address 
 var distances = [];
+		var origin = patientAddress;
 
 function getDistances(response, status) {
 	if(status == google.maps.DistanceMatrixStatus.OK) {
-		var origin = patientAddress;
 		var destinations = response.destinationAddresses;
 
 		for(var i = 0; i < origins.length; i++) {
@@ -122,4 +122,48 @@ function getDistances(response, status) {
 }
 
 //find shortest distance
-var minDistance = distances.reduce(function());	
+var minDistance = function() {
+	var minDistObj = {};
+	for(var i = 0; i < distances.length; i++)
+	{
+		if(distances[i].distance < distances[i+1].distance)
+			minDistObj = distances[i];
+		else
+			minDistObj = distances[i+1];
+	}
+	return minDistObj;	
+};
+
+//use shortest distance to calculate directions to nearest office
+var directionsDisplay;
+var directionsService = new google.maps.DirectionsService();
+var map;
+
+function initialize() {
+	directionsDisplay = new google.maps.DirectionsRenderer();
+	var orlando = "Orlando, Florida";
+	var mapOptions = {
+		zoom: 7, 
+		center: orlando
+	};
+	map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+	directionsDisplay.setMap(map);	
+}
+
+function calcRoute() {
+	var start = patientAddress;
+	var end = minDistance.address;
+	var request = {
+		origin: start, 
+		destination: end,
+		travelMode: google.maps.TravelMode.DRIVING, 
+		unitSystem: google.maps.UnitSystem.IMPERIAL
+	};
+	directionsService.route(request, function(result, status) {
+		if (status == google.maps.DirectionsStatus.OK) {
+			directionsDisplay.setDirections(result);
+		}
+	});
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
