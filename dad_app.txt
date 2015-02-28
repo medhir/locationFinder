@@ -1,0 +1,15 @@
+--> web based application
+
+place patients address. Gives nearest office location + distance from every office
+
+doctor's schedule tied to the database
+
+eclinical scheduling
+
+-------------------------------------
+GOOGLE MAPS DIRECTION API
+-------------------------------------
+- create an object of type DirectionsService
+- call DirectionsService.route() with:
+	1. a DirectionsRequest object literal
+	2. a callback method to execute upon receipt of the response
