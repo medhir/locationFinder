@@ -84,15 +84,37 @@ var offices = [
 
 //extract address property from objects in offices array
 var addresses = offices.map(function(office) {
-	return office.name;
+	return office.address;
 });
 
-//extract patient address 
-var patientAddress = document.getElementById("patientAddress").value;
-
+var directionsDisplay;
 //API call to google maps API Distance Matrix service
 var getDistanceService = new google.maps.DistanceMatrixService();
+//API call to google maps API Directions service
+var directionsService = new google.maps.DirectionsService();
+var map;
 
+//initialize map
+function initialize() {
+	directionsDisplay = new google.maps.DirectionsRenderer();
+	var orlando = new google.maps.LatLng(28.4158, -81.2989);
+	var mapOptions = {
+		zoom: 9, 
+		center: orlando
+	};
+	map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+	directionsDisplay.setMap(map);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+function getDirections() {
+	//extract patient address 
+	var patientAddress = document.getElementById("patientAddress").value;
+}
+
+/*
 service.getDistanceMatrix({
 	origin: patientAddress,
 	destinations: addresses,
@@ -102,7 +124,7 @@ service.getDistanceMatrix({
 
 //array of objects with distance, office address 
 var distances = [];
-		var origin = patientAddress;
+var origin = patientAddress;
 
 function getDistances(response, status) {
 	if(status == google.maps.DistanceMatrixStatus.OK) {
@@ -113,8 +135,8 @@ function getDistances(response, status) {
 			for(var j = 0; j < response.length; j++) {
 				var element = results[j];
 				distances.push({
-					address: destinations[j];
-					distance: element.destination.text;
+					address: destinations[j],
+					distance: element.destination.text
 				});
 			}
 		}
@@ -135,9 +157,6 @@ var minDistance = function() {
 };
 
 //use shortest distance to calculate directions to nearest office
-var directionsDisplay;
-var directionsService = new google.maps.DirectionsService();
-var map;
 
 function initialize() {
 	directionsDisplay = new google.maps.DirectionsRenderer();
@@ -165,5 +184,4 @@ function calcRoute() {
 		}
 	});
 }
-
-google.maps.event.addDomListener(window, 'load', initialize);
+*/
