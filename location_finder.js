@@ -182,44 +182,5 @@ function getDirections() {
 				calcRoute();
 			}
 		}
-
-		/*
-		//find shortest distance
-		var findMinDistance = function(distances) {
-			var minDist = {};
-			for(var i = 0; i < distances.length; i++)
-			{
-				if(distances[i].distance < distances[i+1].distance)
-					minDistObj = distances[i];
-				else
-					minDistObj = distances[i+1];
-			}
-			return minDistObj;	
-		};
-
-		//use shortest distance to calculate directions to nearest office
-
-		var minDistance = findMinDistance(distances);
-
-		console.log(minDistance);
-
-		function calcRoute() {
-			var start = patientAddress;
-			var end = minDistance.address;
-			var request = {
-				origin: start, 
-				destination: end,
-				travelMode: google.maps.TravelMode.DRIVING, 
-				unitSystem: google.maps.UnitSystem.IMPERIAL
-			};
-			directionsService.route(request, function(result, status) {
-				if (status == google.maps.DirectionsStatus.OK) {
-					directionsDisplay.setDirections(result);
-				}
-			});
-		}
-
-		calcRoute();
-		*/
 	}	
 }
