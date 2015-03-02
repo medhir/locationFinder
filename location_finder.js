@@ -89,7 +89,7 @@ var addresses = offices.map(function(office) {
 
 var directionsDisplay;
 //API call to google maps API Distance Matrix service
-var getDistanceService = new google.maps.DistanceMatrixService();
+var service = new google.maps.DistanceMatrixService();
 //API call to google maps API Directions service
 var directionsService = new google.maps.DirectionsService();
 var map;
@@ -109,79 +109,117 @@ function initialize() {
 google.maps.event.addDomListener(window, 'load', initialize);
 
 
+
 function getDirections() {
 	//extract patient address 
 	var patientAddress = document.getElementById("patientAddress").value;
-}
 
-/*
-service.getDistanceMatrix({
-	origin: patientAddress,
-	destinations: addresses,
-	travelMode: google.maps.TravelMode.DRIVING,
-	unitSystem: google.maps.UnitSystem.IMPERIAL
-}, getDistances);
+	if(patientAddress == '')
+		alert("Please use a valid address");
+	else {
+		var distances = [];
+		var origin = patientAddress;
 
-//array of objects with distance, office address 
-var distances = [];
-var origin = patientAddress;
+		service.getDistanceMatrix(
+		{
+			origins: [origin],
+			destinations: addresses,
+			travelMode: google.maps.TravelMode.DRIVING,
+			unitSystem: google.maps.UnitSystem.IMPERIAL
+		}, getDistances);
 
-function getDistances(response, status) {
-	if(status == google.maps.DistanceMatrixStatus.OK) {
-		var destinations = response.destinationAddresses;
+		function getDistances(response, status) {
+			if(status == google.maps.DistanceMatrixStatus.OK) {
 
-		for(var i = 0; i < origins.length; i++) {
-			var results = response.rows[i].elements;
-			for(var j = 0; j < response.length; j++) {
-				var element = results[j];
-				distances.push({
-					address: destinations[j],
-					distance: element.destination.text
-				});
+				var origins = response.originAddresses;
+				var destinations = response.destinationAddresses;
+
+				for(var i = 0; i < origins.length; i++) {
+					var results = response.rows[i].elements;
+					for(var j = 0; j < results.length; j++) {
+						var element = results[j];
+						var dist = parseFloat(element.distance.text);
+						distances.push({
+							address: destinations[j],
+							distance: dist
+						});
+					}
+				}
+
+				console.log(distances);
+
+				//find shortest distance
+				var findMinDistance = function(distances) {
+					var minDistObj = distances[0];
+					for(var i = 1; i < distances.length; i++)
+					{
+						if(distances[i].distance < minDistObj.distance)
+							minDistObj = distances[i];
+					}
+					return minDistObj;	
+				};
+
+				//use shortest distance to calculate directions to nearest office
+
+				var minDistance = findMinDistance(distances);
+
+				function calcRoute() {
+					var start = patientAddress;
+					var end = minDistance.address;
+					var request = {
+						origin: start, 
+						destination: end,
+						travelMode: google.maps.TravelMode.DRIVING, 
+						unitSystem: google.maps.UnitSystem.IMPERIAL
+					};
+					directionsService.route(request, function(result, status) {
+						if (status == google.maps.DirectionsStatus.OK) {
+							directionsDisplay.setDirections(result);
+						}
+					});
+				}
+
+				calcRoute();
 			}
 		}
-	}
-}
 
-//find shortest distance
-var minDistance = function() {
-	var minDistObj = {};
-	for(var i = 0; i < distances.length; i++)
-	{
-		if(distances[i].distance < distances[i+1].distance)
-			minDistObj = distances[i];
-		else
-			minDistObj = distances[i+1];
-	}
-	return minDistObj;	
-};
+		/*
+		//find shortest distance
+		var findMinDistance = function(distances) {
+			var minDist = {};
+			for(var i = 0; i < distances.length; i++)
+			{
+				if(distances[i].distance < distances[i+1].distance)
+					minDistObj = distances[i];
+				else
+					minDistObj = distances[i+1];
+			}
+			return minDistObj;	
+		};
 
-//use shortest distance to calculate directions to nearest office
+		//use shortest distance to calculate directions to nearest office
 
-function initialize() {
-	directionsDisplay = new google.maps.DirectionsRenderer();
-	var orlando = "Orlando, Florida";
-	var mapOptions = {
-		zoom: 7, 
-		center: orlando
-	};
-	map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-	directionsDisplay.setMap(map);	
-}
+		var minDistance = findMinDistance(distances);
 
-function calcRoute() {
-	var start = patientAddress;
-	var end = minDistance.address;
-	var request = {
-		origin: start, 
-		destination: end,
-		travelMode: google.maps.TravelMode.DRIVING, 
-		unitSystem: google.maps.UnitSystem.IMPERIAL
-	};
-	directionsService.route(request, function(result, status) {
-		if (status == google.maps.DirectionsStatus.OK) {
-			directionsDisplay.setDirections(result);
+		console.log(minDistance);
+
+		function calcRoute() {
+			var start = patientAddress;
+			var end = minDistance.address;
+			var request = {
+				origin: start, 
+				destination: end,
+				travelMode: google.maps.TravelMode.DRIVING, 
+				unitSystem: google.maps.UnitSystem.IMPERIAL
+			};
+			directionsService.route(request, function(result, status) {
+				if (status == google.maps.DirectionsStatus.OK) {
+					directionsDisplay.setDirections(result);
+				}
+			});
 		}
-	});
+
+		calcRoute();
+		*/
+	}	
 }
-*/

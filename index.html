@@ -9,8 +9,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="location_finder.js"></script>
-		<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
-		<script src="http://angular-ui.github.io/ui-router/release/angular-ui-router.min.js"></script>
 	</head>
 	<body>
 		<div class="row">
@@ -20,7 +18,7 @@
 				<div class="input-group col-md-12">
 					<input type="text" class="form-control" placeholder="Enter Address Here" id="patientAddress">
 				</div>
-				<button class="btn btn-primary" type="submit" onclick="getDirections()">Submit</button>
+				<button class="btn btn-primary" type="submit" onclick="getDirections()" id="patientEnter">Submit</button>
 			</div>
 		</div>
 		<div class="row">
